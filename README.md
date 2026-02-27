@@ -41,6 +41,30 @@ This repo deploys MK8s training infrastructure with Terraform from `infra/` and 
    terraform apply
    ```
 
+## What Terraform Creates (Region 1 and Region 2)
+
+After `terraform apply`, this stack creates:
+
+Region 1 (`region1`, always):
+- One MK8s cluster.
+- One CPU node group.
+- One or more GPU node groups.
+- Optional InfiniBand GPU cluster (`enable_gpu_cluster = true`).
+- Optional Filestore (`enable_filestore = true`).
+- Primary-cluster add-ons: network operator, GPU operator/device plugin, observability stack, and optional KubeRay/KubeRay Service.
+- Optional MLflow managed cluster (`enable_mlflow_cluster = true`, primary region only).
+
+Region 2 (`region2`, only if `enable_secondary_region = true`):
+- One MK8s cluster.
+- One CPU node group.
+- One or more GPU node groups.
+- Optional InfiniBand GPU cluster (`enable_gpu_cluster = true`).
+- Optional Filestore (`enable_filestore = true`).
+
+Shared behavior:
+- Region-specific GPU platform, preset, and InfiniBand fabric settings are applied.
+- Node groups in each deployed region are labeled for this solution.
+
 ## Get Kube Contexts
 
 Use the helper script from inside `infra/`:
