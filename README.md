@@ -200,6 +200,26 @@ sky serve up -n llama7b-svc skypilot/llama7b_serve.yaml \
   --infra kubernetes/<your-context>
 ```
 
+Get the service endpoint:
+
+```bash
+sky serve status llama7b-svc --endpoint
+```
+
+Call the model (`/v1/completions`) using that endpoint:
+
+```bash
+ENDPOINT=http://<endpoint-host-or-ip>:8000
+curl -s "$ENDPOINT/v1/completions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Llama-2-7b-hf",
+    "prompt": "What is distributed training?",
+    "max_tokens": 128,
+    "temperature": 0.7
+  }'
+```
+
 ## Troubleshooting
 
 - `Invalid token` / `system:anonymous`: `unset NEBIUS_IAM_TOKEN && ./setup-skypilot-k8s.sh`.
