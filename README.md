@@ -1,55 +1,134 @@
-[![Nebius](./.assets/nebius-dark.png)](https://nebius.ai/#gh-dark-mode-only)
-[![Nebius](./.assets/nebius-light.png)](https://nebius.ai/#gh-light-mode-only)
+# SkyPilot GTC Demo (Nebius MK8s)
 
-# Nebius Solution Library
-
-## Table of contents
-* [Introduction](#introduction)
-* [Solutions](#solutions)
-* [Prerequisites](#prerequisites)
-
-## Introduction
-
-This repository is a curated collection of Terraform and Helm solutions designed to streamline the deployment and management of AI and ML applications on Nebius AI Cloud.  Our solutions library has the tools and resources to help you deploy complex machine learning models, manage scalable infrastructure and ensure that your AI-powered applications run smoothly.
-
-## Solutions
-
-### Training
-
-[Kubernetes prepared for Training](./k8s-training/README.md)
-
-For those who prefer containerized environments, our Kubernetes solution includes GPU-Operator and Network-Operator. This setup ensures that your training workloads use dedicated GPU resources and optimized network configurations, both of which are critical components for AI models that require a lot of computational power. . GPU-Operator simplifies the management of NVIDIA GPUs, automating the deployment of necessary drivers and plugins. Similarly, the Network-Operator improves network performance, ensuring seamless communication throughout your cluster. The cluster uses InfiniBand technology, which provides the fastest host connections for data-intensive tasks. 
-
-[SLURM](./soperator/README.md)
-
-Our SLURM solutions offer a streamlined approach for users who prefer traditional HPC environments. These solutions include ready-to-use images pre-configured with NVIDIA drivers and are ideal for those looking to take advantage of SLURM’s robust job scheduling capabilities.  Similar to our Kubernetes offerings, the SLURM solutions are optimized for InfiniBand connectivity, ensuring peak performance and efficiency in data transfer and communication between nodes.
-
-### Network
-
-[Wireguard](./wireguard/README.md)
-
-Enhance security with a Wireguard VPN instance by minimizing the use of public IPs and limiting access to your cloud environment.
-
-[Bastion](./bastion/README.md)
-
-Deploys a Bastion instance that serves as a secure jump host for your infrastructure. It improves the security by minimizing the use of Public IPs and limiting access to the rest of the environment. 
-
-### Integration
-
-[Anyscale](./anyscale/README.md)
-
-Installs the Anyscale operator on Nebius AI Cloud and offers integration with Anyscale. 
-
-[Skypilot](./skypilot/README.md)
-
-Offers seamless integration with SkyPilot, simplifying the process of launching and managing distributed AI workloads on powerful GPU instances.
+This repo deploys MK8s training infrastructure with Terraform from `k8s-training/` and provides SkyPilot examples for fine-tuning and serving.
 
 ## Prerequisites
 
-These solutions are built for Nebius AI Cloud, for more information please check our [website](https://nebius.ai/).
+1. Install Nebius CLI:
+   ```bash
+   curl -sSL https://storage.eu-north1.nebius.cloud/cli/install.sh | bash
+   exec -l $SHELL
+   ```
+2. Configure Nebius CLI auth:
+   https://docs.nebius.com/cli/configure/
+3. Install required tools: `terraform`, `jq`, `yq`, `kubectl`, `uv`.
+4. From repo root, work in `k8s-training/` for Terraform:
+   ```bash
+   cd k8s-training
+   ```
 
-These samples mainly use [Terraform](https://www.terraform.io/) to deploy architectures on Nebius AI Cloud, for more instructions on how to use Terraform in Nebius check [here](https://docs.nebius.ai/terraform-provider/)
+## Terraform Deploy
 
-These solutions will also require you to install the [Nebius AI CLI](https://docs.nebius.ai/cli/).
+1. Edit `environment.sh` values:
+   - `NEBIUS_TENANT_ID`
+   - `NEBIUS_PROJECT_ID_REGION1`
+   - `NEBIUS_PROJECT_ID_REGION2`
+   - `NEBIUS_REGION1`
+   - `NEBIUS_REGION2`
+2. Load environment and generate backend/auto vars:
+   ```bash
+   source ./environment.sh
+   ```
+3. Create local tfvars (ignored by git):
+   ```bash
+   cp terraform.tfvars.example terraform.tfvars 2>/dev/null || true
+   ```
+   If no example file exists, create `terraform.tfvars` manually and set your values.
+4. Initialize and deploy:
+   ```bash
+   terraform init -reconfigure
+   terraform plan
+   terraform apply
+   ```
 
-More general documentation about Nebius AI can be found [here](https://docs.nebius.ai/).
+## Get Kube Contexts
+
+Use the helper script from inside `k8s-training/`:
+
+```bash
+chmod +x ./setup-skypilot-k8s.sh
+./setup-skypilot-k8s.sh
+```
+
+Then verify:
+
+```bash
+kubectl get nodes
+sky check kubernetes
+```
+
+## SkyPilot Setup
+
+From `k8s-training/`:
+
+```bash
+UV_CACHE_DIR=$PWD/.uv-cache uv venv .venv
+UV_CACHE_DIR=$PWD/.uv-cache uv pip install --python .venv/bin/python "skypilot-nightly[kubernetes]"
+source .venv/bin/activate
+sky check
+```
+
+## Fine-Tuning Run (Llama 7B)
+
+Enable MLflow in `terraform.tfvars` before `terraform apply`:
+
+```hcl
+enable_mlflow_cluster = true
+```
+
+Export MLflow values:
+
+```bash
+export MLFLOW_TRACKING_URI=$(terraform output -json mlflow_status | jq -r '.endpoints.public_endpoint // .endpoints.public // empty')
+export MLFLOW_TRACKING_USERNAME=$(terraform output -raw mlflow_admin_username)
+export MLFLOW_TRACKING_PASSWORD=$(terraform output -raw mlflow_admin_password)
+```
+
+Set HF token and launch:
+
+```bash
+export HF_TOKEN=<your_hf_token>
+sky launch -c llama7b-ft skypilot/llama7b_finetune.yaml \
+  --env HF_TOKEN=$HF_TOKEN \
+  --secret MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI \
+  --secret MLFLOW_TRACKING_USERNAME=$MLFLOW_TRACKING_USERNAME \
+  --secret MLFLOW_TRACKING_PASSWORD=$MLFLOW_TRACKING_PASSWORD
+```
+
+## Serving Run (vLLM)
+
+If SkyPilot serve/jobs hit AWS S3 endpoints instead of Nebius, export these first:
+
+```bash
+export AWS_PROFILE=nebius
+export AWS_DEFAULT_PROFILE=nebius
+export AWS_ENDPOINT_URL_S3=https://storage.eu-west1.nebius.cloud
+export AWS_S3_ENDPOINT_URL=https://storage.eu-west1.nebius.cloud
+export S3_ENDPOINT=https://storage.eu-west1.nebius.cloud
+```
+
+Launch serve:
+
+```bash
+sky serve up -n llama7b-svc skypilot/llama7b_serve.yaml \
+  --gpus H200:8 \
+  --env HF_TOKEN=$HF_TOKEN \
+  --env TENSOR_PARALLEL_SIZE=8
+```
+
+Optional: pin to a specific context:
+
+```bash
+sky serve up -n llama7b-svc skypilot/llama7b_serve.yaml \
+  --gpus H200:8 \
+  --env HF_TOKEN=$HF_TOKEN \
+  --env TENSOR_PARALLEL_SIZE=8 \
+  --infra kubernetes/<your-context>
+```
+
+## Troubleshooting
+
+- `Invalid token` / `system:anonymous`: `unset NEBIUS_IAM_TOKEN && ./setup-skypilot-k8s.sh`.
+- SkyPilot pending with S3 endpoint errors: set the S3 env vars above, then `sky api stop` and relaunch.
+- Missing `sky` command: `source .venv/bin/activate`.
+- Preemptible policy errors: set `cpu_nodes_preemptible = false` and/or `gpu_nodes_preemptible = false`.
