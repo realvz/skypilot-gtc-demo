@@ -161,6 +161,12 @@ After the fine-tuning job starts, you can open the SkyPilot dashboard:
 sky dashboard
 ```
 
+Open the MLflow dashboard to track the training metrics (get the URL from Terraform output):
+
+```bash
+echo "$MLFLOW_TRACKING_URI"
+```
+
 ## Serving Run (vLLM)
 
 If SkyPilot serve/jobs hit AWS S3 endpoints instead of Nebius, export these first:
