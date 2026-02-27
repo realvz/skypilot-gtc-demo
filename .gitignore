@@ -45,3 +45,12 @@ terraform.rc
 
 # Local backup of moved folders
 /backup/
+
+# Local secret/state/config artifacts
+*.tfvars
+*.auto.tfvars
+*.tfstate
+*.tfstate.*
+**/__pycache__/
+*.pyc
+*access_token*.txt

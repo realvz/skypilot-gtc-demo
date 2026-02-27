@@ -1,6 +1,0 @@
-parent_id_region1   = "project-e00z4n1apr009ey875m33n"
-parent_id_region2   = "project-e01d5vqhpr003sj5jcr1qk"
-region1            = "eu-north1"
-region2            = "eu-west1"
-subnet_id_region1  = "vpcsubnet-e00gj8p7mcysa9k41k"
-subnet_id_region2  = "vpcsubnet-e01ysvy0chv30wke07"
