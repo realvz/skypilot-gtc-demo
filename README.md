@@ -76,9 +76,12 @@ terraform output -json kube_cluster \
   | jq -r 'to_entries[].value.name | "nebius-mk8s-\(.)"' \
   | while IFS= read -r ctx; do
   echo "=== $ctx ==="
-  kubectl --context "$ctx" get nodes
+  kubectl --context "$ctx" get nodes \
+    -o custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\\.com/gpu,CPU:.status.allocatable.cpu
 done
 ```
+
+You should see at least one node with `GPU` greater than `0` in at least one cluster.
 
 ## SkyPilot Setup
 
