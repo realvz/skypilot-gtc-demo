@@ -165,6 +165,8 @@ Open the MLflow dashboard to track the training metrics (get the URL from Terraf
 
 ```bash
 echo "$MLFLOW_TRACKING_URI"
+echo "$MLFLOW_TRACKING_USERNAME"
+echo "$MLFLOW_TRACKING_PASSWORD"
 ```
 
 ## Serving Run (vLLM)
