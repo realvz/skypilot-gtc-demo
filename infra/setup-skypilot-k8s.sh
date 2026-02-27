@@ -53,7 +53,7 @@ require_sky_cmd() {
     else
       echo "SkyPilot may not be installed in the active shell environment." >&2
       echo "Install it and rerun, e.g.:" >&2
-      echo "  pip install \"skypilot-nightly[kubernetes]\"" >&2
+      echo "  pip install \"skypilot-nightly[kubernetes]==1.0.0.dev20260219\"" >&2
     fi
   else
     echo "A virtual environment is active ($VIRTUAL_ENV), but 'sky' is not available." >&2

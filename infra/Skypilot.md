@@ -70,7 +70,7 @@ Create uv environment and install SkyPilot:
 cd infra
 mkdir -p .uv-cache
 UV_CACHE_DIR=$PWD/.uv-cache uv venv .venv
-UV_CACHE_DIR=$PWD/.uv-cache uv pip install --python .venv/bin/python "skypilot-nightly[kubernetes]"
+UV_CACHE_DIR=$PWD/.uv-cache uv pip install --python .venv/bin/python "skypilot-nightly[kubernetes]==1.0.0.dev20260219"
 source .venv/bin/activate
 sky --version
 ```
@@ -170,4 +170,3 @@ If needed, destroy infra:
 ```bash
 terraform destroy
 ```
-
