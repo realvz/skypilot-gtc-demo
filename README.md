@@ -209,7 +209,7 @@ sky serve status llama7b-svc --endpoint
 Call the model (`/v1/completions`) using that endpoint:
 
 ```bash
-ENDPOINT=http://<endpoint-host-or-ip>:8000
+ENDPOINT=$(sky serve status llama7b-svc --endpoint)
 curl -s "$ENDPOINT/v1/completions" \
   -H "Content-Type: application/json" \
   -d '{
