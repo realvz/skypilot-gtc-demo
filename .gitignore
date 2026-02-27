@@ -49,6 +49,7 @@ terraform.rc
 # Local secret/state/config artifacts
 *.tfvars
 *.auto.tfvars
+!/infra/terraform.tfvars
 *.tfstate
 *.tfstate.*
 **/__pycache__/
