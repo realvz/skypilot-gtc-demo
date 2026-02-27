@@ -72,7 +72,15 @@ chmod +x ./setup-skypilot-k8s.sh
 Then verify:
 
 ```bash
-kubectl get nodes
+mapfile -t CLUSTER_CONTEXTS < <(
+  terraform output -json kube_cluster \
+    | jq -r 'to_entries[].value.name | "nebius-mk8s-\(.)"'
+)
+
+for ctx in "${CLUSTER_CONTEXTS[@]}"; do
+  echo "=== $ctx ==="
+  kubectl --context "$ctx" get nodes
+done
 ```
 
 ## SkyPilot Setup
