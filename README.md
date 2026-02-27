@@ -54,7 +54,6 @@ Then verify:
 
 ```bash
 kubectl get nodes
-sky check kubernetes
 ```
 
 ## SkyPilot Setup
@@ -66,6 +65,7 @@ UV_CACHE_DIR=$PWD/.uv-cache uv venv .venv
 UV_CACHE_DIR=$PWD/.uv-cache uv pip install --python .venv/bin/python "skypilot-nightly[kubernetes]"
 source .venv/bin/activate
 sky check
+sky check kubernetes
 ```
 
 ## Fine-Tuning Run (Llama 7B)
