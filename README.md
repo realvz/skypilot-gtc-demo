@@ -95,6 +95,12 @@ sky launch -c llama7b-ft skypilot/llama7b_finetune.yaml \
   --secret MLFLOW_TRACKING_PASSWORD=$MLFLOW_TRACKING_PASSWORD
 ```
 
+After the fine-tuning job starts, you can open the SkyPilot dashboard:
+
+```bash
+sky dashboard
+```
+
 ## Serving Run (vLLM)
 
 If SkyPilot serve/jobs hit AWS S3 endpoints instead of Nebius, export these first:
