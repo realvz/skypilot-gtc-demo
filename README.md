@@ -92,7 +92,40 @@ UV_CACHE_DIR=$PWD/.uv-cache uv venv .venv
 UV_CACHE_DIR=$PWD/.uv-cache uv pip install --python .venv/bin/python "skypilot-nightly[kubernetes]==1.0.0.dev20260219"
 source .venv/bin/activate
 sky check
-sky check kubernetes
+```
+
+Sample `sky check` output:
+
+```text
+Checking credentials to enable infra for SkyPilot.
+  Kubernetes: enabled [compute]
+    Allowed contexts:
+    ├── nebius-mk8s-skypilot-gtc-demo-2026-eu-north1: enabled.
+    └── nebius-mk8s-skypilot-gtc-demo-2026-eu-west1: enabled.
+
+🎉 Enabled infra 🎉
+  Kubernetes [compute]
+    Allowed contexts:
+    ├── nebius-mk8s-skypilot-gtc-demo-2026-eu-north1
+    └── nebius-mk8s-skypilot-gtc-demo-2026-eu-west1
+```
+
+Then confirm SkyPilot sees the enabled infra:
+
+```bash
+sky status
+```
+
+Sample `sky status` output:
+
+```text
+Enabled Infra: kubernetes/nebius-mk8s-skypilot-gtc-demo-2026-eu-north1, kubernetes/nebius-mk8s-skypilot-gtc-demo-2026-eu-west1
+
+Clusters
+NAME                           INFRA                                   RESOURCES                                STATUS  AUTOSTOP    LAUNCHED
+
+Managed jobs
+No in-progress managed jobs. (See: sky jobs -h)
 ```
 
 ## Fine-Tuning Run (Llama 7B)
