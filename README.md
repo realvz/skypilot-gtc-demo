@@ -29,11 +29,7 @@ This repo deploys MK8s training infrastructure with Terraform from `infra/` and 
    ```bash
    source ./environment.sh
    ```
-3. Create local tfvars (ignored by git):
-   ```bash
-   cp terraform.tfvars.example terraform.tfvars 2>/dev/null || true
-   ```
-   If no example file exists, create `terraform.tfvars` manually and set your values.
+3. Edit the existing `terraform.tfvars` file and set values for your environment.
 4. Initialize and deploy:
    ```bash
    terraform init -reconfigure
