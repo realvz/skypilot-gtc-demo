@@ -47,22 +47,17 @@ After `terraform apply`, this stack creates:
 
 Region 1 (`region1`, always):
 - One MK8s cluster.
-- One CPU node group.
+- Zero or one CPU node group (optional).
 - One or more GPU node groups.
-- Optional InfiniBand GPU cluster (`enable_gpu_cluster = true`).
-- Optional Filestore (`enable_filestore = true`).
-- Primary-cluster add-ons: network operator, GPU operator/device plugin, observability stack, and optional KubeRay/KubeRay Service.
-- Optional MLflow managed cluster (`enable_mlflow_cluster = true`, primary region only).
+- One MLflow managed cluster (required for fine-tuning flow).
 
 Region 2 (`region2`, only if `enable_secondary_region = true`):
 - One MK8s cluster.
-- One CPU node group.
+- Zero or one CPU node group (optional).
 - One or more GPU node groups.
-- Optional InfiniBand GPU cluster (`enable_gpu_cluster = true`).
-- Optional Filestore (`enable_filestore = true`).
 
 Shared behavior:
-- Region-specific GPU platform, preset, and InfiniBand fabric settings are applied.
+- Region-specific GPU platform and preset settings are applied.
 - Node groups in each deployed region are labeled for this solution.
 
 ## Get Kube Contexts
@@ -94,7 +89,7 @@ sky check kubernetes
 
 ## Fine-Tuning Run (Llama 7B)
 
-Enable MLflow in `terraform.tfvars` before `terraform apply`:
+MLflow is required for the fine-tuning flow, so set this in `terraform.tfvars` before `terraform apply`:
 
 ```hcl
 enable_mlflow_cluster = true
