@@ -93,7 +93,7 @@ variable "enable_secondary_region" {
 variable "cluster_name" {
   description = "Base name used for MK8s cluster and related resources (node groups, service accounts)."
   type        = string
-  default     = "k8s-training"
+  default     = "infra"
 }
 
 variable "k8s_version" {
@@ -393,7 +393,7 @@ variable "mlflow_cluster_name" {
 variable "mlflow_cluster_description" {
   description = "Description of the Managed Service for MLflow cluster."
   type        = string
-  default     = "Managed MLflow cluster for k8s-training"
+  default     = "Managed MLflow cluster for infra"
 }
 
 variable "mlflow_public_access" {

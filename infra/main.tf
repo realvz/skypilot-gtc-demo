@@ -55,7 +55,7 @@ resource "nebius_mk8s_v1_node_group" "cpu-only" {
   parent_id        = nebius_mk8s_v1_cluster.k8s-cluster[each.key].id
   name             = local.multi_region ? "${var.cluster_name}-${each.value.region}-ng-cpu" : "${var.cluster_name}-ng-cpu"
   labels = {
-    "library-solution" : "k8s-training",
+    "library-solution" : "infra",
   }
   version = var.k8s_version
   template = {
@@ -108,7 +108,7 @@ resource "nebius_mk8s_v1_node_group" "gpu" {
   parent_id        = nebius_mk8s_v1_cluster.k8s-cluster[each.value.cluster_key].id
   name             = local.multi_region ? "${var.cluster_name}-${each.value.cluster.region}-ng-gpu-${each.value.group_index}" : "${var.cluster_name}-ng-gpu-${each.value.group_index}"
   labels = {
-    "library-solution" : "k8s-training",
+    "library-solution" : "infra",
   }
   version = var.k8s_version
   template = {

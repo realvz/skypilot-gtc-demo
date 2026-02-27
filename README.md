@@ -1,6 +1,6 @@
 # SkyPilot GTC Demo (Nebius MK8s)
 
-This repo deploys MK8s training infrastructure with Terraform from `k8s-training/` and provides SkyPilot examples for fine-tuning and serving.
+This repo deploys MK8s training infrastructure with Terraform from `infra/` and provides SkyPilot examples for fine-tuning and serving.
 
 ## Prerequisites
 
@@ -12,9 +12,9 @@ This repo deploys MK8s training infrastructure with Terraform from `k8s-training
 2. Configure Nebius CLI auth:
    https://docs.nebius.com/cli/configure/
 3. Install required tools: `terraform`, `jq`, `yq`, `kubectl`, `uv`.
-4. From repo root, work in `k8s-training/` for Terraform:
+4. From repo root, work in `infra/` for Terraform:
    ```bash
-   cd k8s-training
+   cd infra
    ```
 
 ## Terraform Deploy
@@ -43,7 +43,7 @@ This repo deploys MK8s training infrastructure with Terraform from `k8s-training
 
 ## Get Kube Contexts
 
-Use the helper script from inside `k8s-training/`:
+Use the helper script from inside `infra/`:
 
 ```bash
 chmod +x ./setup-skypilot-k8s.sh
@@ -59,7 +59,7 @@ sky check kubernetes
 
 ## SkyPilot Setup
 
-From `k8s-training/`:
+From `infra/`:
 
 ```bash
 UV_CACHE_DIR=$PWD/.uv-cache uv venv .venv

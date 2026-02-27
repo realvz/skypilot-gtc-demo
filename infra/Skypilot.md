@@ -24,7 +24,7 @@ Set:
 Example:
 
 ```bash
-cd k8s-training
+cd infra
 vi environment.sh
 ```
 
@@ -67,7 +67,7 @@ terraform output -json kube_cluster | jq
 Create uv environment and install SkyPilot:
 
 ```bash
-cd k8s-training
+cd infra
 mkdir -p .uv-cache
 UV_CACHE_DIR=$PWD/.uv-cache uv venv .venv
 UV_CACHE_DIR=$PWD/.uv-cache uv pip install --python .venv/bin/python "skypilot-nightly[kubernetes]"

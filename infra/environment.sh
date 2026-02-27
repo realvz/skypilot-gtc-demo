@@ -71,7 +71,7 @@ fi
 export NEBIUS_BUCKET_REGION
 
 # Nebius service account
-NEBIUS_SA_NAME="k8s-training-sa"
+NEBIUS_SA_NAME="infra-sa"
 NEBIUS_SA_ID=$(nebius iam service-account get-by-name \
   --parent-id "${NEBIUS_PROJECT_ID_REGION1}" \
   --name "${NEBIUS_SA_NAME}" \
@@ -121,7 +121,7 @@ else
 fi
 NEBIUS_SA_ACCESS_KEY_ID=$(nebius iam v2 access-key create \
   --parent-id "${NEBIUS_PROJECT_ID_REGION1}" \
-  --name "k8s-training-tfstate-$(date +%s)" \
+  --name "infra-tfstate-$(date +%s)" \
   --account-service-account-id "${NEBIUS_SA_ID}" \
   --description 'Temporary Object Storage Access for Terraform' \
   --expires-at "${EXPIRATION_DATE}" \

@@ -63,7 +63,7 @@ resource "nebius_mk8s_v1_node_group" "egress-gateway" {
   parent_id        = var.mk8s_cluster_id
   name             = "k8s-ng-egress-gateway"
   labels = {
-    "library-solution" : "k8s-training",
+    "library-solution" : "infra",
   }
   version = var.mk8s_version
 

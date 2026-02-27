@@ -10,7 +10,7 @@
 # Usage:    Run this script from the repository (or set `TF_DIR` to the
 #           directory containing the Terraform state/outputs):
 #
-#   TF_DIR=./k8s-training ./k8s-training/setup-skypilot-k8s.sh
+#   TF_DIR=./infra ./infra/setup-skypilot-k8s.sh
 #
 # Prereqs:  terraform, jq, nebius, kubectl, sky, yq
 #
