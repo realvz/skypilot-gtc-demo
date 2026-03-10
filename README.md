@@ -1,6 +1,10 @@
 # SkyPilot GTC Demo (Nebius MK8s)
 
-This repo deploys MK8s training infrastructure with Terraform from `infra/` and provides SkyPilot examples for fine-tuning and serving.
+This repo provisions Nebius Managed Kubernetes infrastructure with Terraform from `infra/` and shows how to run SkyPilot on top of it for training and serving workloads.
+
+The stack is designed for a two-region setup. Terraform creates Kubernetes clusters in two different regions, with region-specific CPU and GPU node groups, and SkyPilot can use those cluster contexts to schedule jobs or services into either region. This makes it possible to launch fine-tuning or serving workloads where capacity is available without changing the overall workflow.
+
+![alt text](images/workflow.png)
 
 ## Prerequisites
 
